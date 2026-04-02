@@ -1,0 +1,19 @@
+User {
+    id
+    name
+    email
+    password
+}
+
+Message {
+    id pk
+    text
+    author_id fk
+    chat_id fk
+}
+
+Chat {
+    id pk
+    id_user1 fk
+    id_user2 fk
+}
