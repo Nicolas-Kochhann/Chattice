@@ -1,5 +1,29 @@
 {
+  "name": "meghaffone-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch --env-file=.env src/server.ts",
+    "build": "tsc",
+    "migrations:up": "drizzle-kit migrate up",
+    "migrations:down": "drizzle-kit migrate down",
+    "migrations:generate": "drizzle-kit generate",
+    "migrations:migrate": "drizzle-kit migrate"
+  },
   "dependencies": {
-    "fastify": "^5.8.4"
+    "@fastify/cors": "^11.2.0",
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
+    "@types/node": "^25.5.2",
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.2",
+    "fastify": "^5.8.4",
+    "pg": "^8.20.0",
+    "tsc": "^2.0.4",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "zod": "^4.3.6"
   }
 }
