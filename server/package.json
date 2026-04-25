@@ -1,5 +1,5 @@
 {
-  "name": "meghaffone-backend",
+  "name": "chattice-backend",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -17,16 +17,20 @@
     "@fastify/swagger": "^9.7.0",
     "@fastify/swagger-ui": "^5.2.5",
     "@fastify/websocket": "^11.2.0",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^25.5.2",
     "@types/pg": "^8.20.0",
     "@types/ws": "^8.18.1",
+    "bcrypt": "^6.0.0",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
+    "drizzle-zod": "^0.8.3",
     "fastify": "^5.8.4",
     "pg": "^8.20.0",
-    "tsc": "^2.0.4",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2",
     "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
   }
 }
