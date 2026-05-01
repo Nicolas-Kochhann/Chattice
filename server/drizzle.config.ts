@@ -10,6 +10,9 @@ export default {
         port: env.POSTGRES_PORT,
         database: env.POSTGRES_NAME,
         user: env.POSTGRES_USER,
-        password: env.POSTGRES_SECRET
+        password: env.POSTGRES_SECRET,
+        ssl: env.POSTGRES_SSL_SUPPORT
     }
-} satisfies Config
+} satisfies Config;
+
+console.log(env.POSTGRES_SSL_SUPPORT);

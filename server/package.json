@@ -7,10 +7,13 @@
   "scripts": {
     "dev": "tsx watch --env-file=.env src/app.ts",
     "build": "tsc",
-    "migrations:up": "drizzle-kit migrate up",
-    "migrations:down": "drizzle-kit migrate down",
+    "migrations:up": "drizzle-kit up",
     "migrations:generate": "drizzle-kit generate",
-    "migrations:migrate": "drizzle-kit migrate"
+    "migrations:migrate": "drizzle-kit migrate",
+    "migrations:check": "drizzle-kit check",
+    "migrations:pull": "drizzle-kit pull",
+    "migrations:push": "drizzle-kit push",
+    "migrations:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
@@ -26,6 +29,7 @@
     "drizzle-orm": "^0.45.2",
     "drizzle-zod": "^0.8.3",
     "fastify": "^5.8.4",
+    "fastify-type-provider-zod": "^6.1.0",
     "pg": "^8.20.0",
     "tsx": "^4.21.0",
     "zod": "^4.3.6"
