@@ -11,7 +11,7 @@ export class AuthService
     {
         const user = await this.repository.findByEmail(email);
 
-        if(user) throw EmailAlreadyExistsError;
+        if(user) throw new EmailAlreadyExistsError();
 
         const newUser = { name: name, email: email, passwordHash: hashSync(password, 10)}
 
@@ -33,5 +33,7 @@ export class AuthService
 
         // TODO: token = generateToken(user);
         // return { user, token };
+
+        return user;
     }
 }
