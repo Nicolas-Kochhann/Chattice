@@ -5,8 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file=.env src/app.ts",
+    "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsc",
+    "test:integration": "tsx --env-file=.env.test --test 'tests/integration/*.test.ts'",
+    "test:unit": "tsx --test 'tests/unit/*.test.ts'",
     "migrations:up": "drizzle-kit up",
     "migrations:generate": "drizzle-kit generate",
     "migrations:migrate": "drizzle-kit migrate",
@@ -31,6 +33,7 @@
     "fastify": "^5.8.4",
     "fastify-type-provider-zod": "^6.1.0",
     "pg": "^8.20.0",
+    "testcontainers": "^11.14.0",
     "tsx": "^4.21.0",
     "zod": "^4.3.6"
   },
