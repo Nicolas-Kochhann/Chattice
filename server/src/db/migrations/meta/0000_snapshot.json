@@ -1,5 +1,5 @@
 {
-  "id": "af581261-88ae-468b-a084-d6855b1374bf",
+  "id": "327d62c2-ea30-4d0c-9c37-d81d964f0a4d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -24,6 +24,13 @@
             "cache": "1",
             "cycle": false
           }
+        },
+        "is_group": {
+          "name": "is_group",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
