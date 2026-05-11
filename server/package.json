@@ -5,8 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file=.env src/app.ts",
+    "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsc",
+    "key:generate": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
+    "refresh-key:generate": "node -e \"console.log(require('crypto').randomBytes(64).toString('hex'))\"",
+    "test:integration": "tsx --env-file=.env.test --test 'tests/integration/*.test.ts'",
+    "test:unit": "tsx --env-file=.env --test 'tests/unit/*.test.ts'",
     "migrations:up": "drizzle-kit up",
     "migrations:generate": "drizzle-kit generate",
     "migrations:migrate": "drizzle-kit migrate",
@@ -16,11 +20,13 @@
     "migrations:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.2.0",
     "@fastify/swagger": "^9.7.0",
     "@fastify/swagger-ui": "^5.2.5",
     "@fastify/websocket": "^11.2.0",
     "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.5.2",
     "@types/pg": "^8.20.0",
     "@types/ws": "^8.18.1",
@@ -30,7 +36,9 @@
     "drizzle-zod": "^0.8.3",
     "fastify": "^5.8.4",
     "fastify-type-provider-zod": "^6.1.0",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.20.0",
+    "testcontainers": "^11.14.0",
     "tsx": "^4.21.0",
     "zod": "^4.3.6"
   },

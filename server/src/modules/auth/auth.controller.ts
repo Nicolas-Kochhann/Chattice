@@ -1,32 +1,81 @@
-import { CreateUserDTO } from "../users/user.types.js";
+import { CreateUserDTO, LoginUserDTO } from "../users/user.types.js";
+import { createUserResponseDTO } from "../users/user.mapper.js"
 import { AuthService } from "./auth.service.js";
-import { DrizzleRepository } from "../users/repositories/drizzle.repository.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 
-const authService = new AuthService(new DrizzleRepository());
+export class AuthController {
+  private readonly authService: AuthService;
 
-export async function registerNewUser(request: FastifyRequest<{ Body: CreateUserDTO }>, reply: FastifyReply)
-{
+  constructor(service: AuthService) {
+    this.authService = service;
+    this.registerNewUser = this.registerNewUser.bind(this);
+    this.loginUser = this.loginUser.bind(this);
+  }
+
+  async registerNewUser(request: FastifyRequest<{ Body: CreateUserDTO }>, reply: FastifyReply) 
+  {
     const userDTO: CreateUserDTO = request.body;
 
-    const result = await authService.registryUser(userDTO);
+    const { user, token, refreshToken } = await this.authService.registryUser(userDTO);
 
-    if(!result){
-        return reply.status(500).send({
-            message: "Sorry! Something went wrong!"
-        });
+    if (!user || !token || !refreshToken) {
+      return reply.status(500).send({
+        message: "Sorry! Something went wrong!",
+      });
     }
 
     const response = {
-        user: {
-            id: result.id,
-            name: result.name,
-            email: result.email,
-            createdAt: result.createdAt,
-            updatedAt: result.updatedAt
-        }
-    }
+      user: createUserResponseDTO(user),
+    };
+
+    reply.setCookie('api_token', token, {
+      path: '/',
+      secure: true,
+      httpOnly: true,
+      sameSite: 'lax'
+    });
+  
+    reply.setCookie('refresh_token', refreshToken, {
+      path: '/',
+      secure: true,
+      httpOnly: true,
+      sameSite: 'lax'
+    })
 
     return reply.status(201).send(response);
+  }
 
+  
+  async loginUser(request: FastifyRequest<{ Body: LoginUserDTO }>, reply: FastifyReply)
+  {
+    const userDTO = request.body;
+
+    const { user, token, refreshToken } = await this.authService.authenticate(userDTO);
+
+    if(!user || !token || !refreshToken){
+      return reply.status(500).send({
+        message: 'Sorry! Something went wrong!',
+      });
+    }
+
+    const response = {
+      user: createUserResponseDTO(user),
+    };
+
+    reply.setCookie('api_token', token, {
+      path: '/',
+      secure: true,
+      httpOnly: true,
+      sameSite: 'lax'
+    });
+  
+    reply.setCookie('refresh_token', refreshToken, {
+      path: '/',
+      secure: true,
+      httpOnly: true,
+      sameSite: 'lax'
+    })
+
+    return reply.status(200).send(response);
+  }
 }

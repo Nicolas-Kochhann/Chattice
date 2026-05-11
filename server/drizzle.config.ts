@@ -14,5 +14,3 @@ export default {
         ssl: env.POSTGRES_SSL_SUPPORT
     }
 } satisfies Config;
-
-console.log(env.POSTGRES_SSL_SUPPORT);
