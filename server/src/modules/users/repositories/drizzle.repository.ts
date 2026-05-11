@@ -27,23 +27,18 @@ export class DrizzleRepository implements UserRepository
 
     async create(user: NewUser): Promise<User|null>
     {
-        try {
             // Destructuring because returning() function returns an array.
             const [result] = await db.insert(users).values(user).returning({ 
                 id: users.id,
                 name: users.name,
                 email: users.email,
+                tokenVersion: users.tokenVersion,
                 createdAt: users.createdAt,
                 updatedAt: users.updatedAt,
                 passwordHash: users.passwordHash
             });
 
             return result;
-            
-        } catch (error) {
-            // TODO: Log to somewhere
-            return null;
-        }
     }
 
 }

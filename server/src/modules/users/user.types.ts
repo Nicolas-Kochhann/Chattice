@@ -10,8 +10,9 @@ const userInsertSchema = createInsertSchema(users).omit({
 });
 
 export const userResponseDTOSchema = userSelectSchema.omit({
-    passwordHash: true
-})
+    passwordHash: true,
+    tokenVersion: true
+});
 
 export const userCreateDTOSchema = z.object({
     name: z.string().max(255).min(3),

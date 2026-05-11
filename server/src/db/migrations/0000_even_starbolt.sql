@@ -10,6 +10,7 @@ CREATE TABLE "users" (
 	"name" varchar(256) NOT NULL,
 	"email" varchar(256) NOT NULL,
 	"password_hash" text NOT NULL,
+	"token_version" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")

@@ -9,11 +9,17 @@ suite('AuthService', () => {
     test('AuthService - registryUser success', async () => {
         const authService = new AuthService(new MockRepository());
 
-        const newUser = await authService.registryUser({ name: 'John', email: 'john@example.com', password: 'password123' });
-        assert(newUser !== null);
-        assert(newUser.name === 'John');
-        assert(newUser.email === 'john@example.com');
-        assert(newUser.passwordHash !== 'password123'); // Should be hashed
+        const { user, token, refreshToken } = await authService.registryUser({ name: 'John', email: 'john@example.com', password: 'password123' });
+        assert(user !== null);
+        assert(user.name === 'John');
+        assert(user.email === 'john@example.com');
+        assert(user.passwordHash !== 'password123'); // Should be hashed
+        
+        assert(token !== null);
+        assert(typeof token === 'string');
+
+        assert(refreshToken !== null);
+        assert(typeof refreshToken === 'string');
     });
 
 
