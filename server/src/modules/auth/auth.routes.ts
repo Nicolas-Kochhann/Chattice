@@ -1,6 +1,6 @@
 import { AuthController } from "./auth.controller.js";
 import { FastifyPluginAsync } from "fastify";
-import { userCreateDTOSchema, userResponseDTOSchema } from "../users/user.types.js";
+import { userCreateDTOSchema, userLoginDTOSchema, userResponseDTOSchema } from "../users/user.types.js";
 import { errorResponseSchema } from "../../errors/error.schema.js";
 import { AuthService } from "./auth.service.js";
 import { DrizzleRepository } from "../users/repositories/drizzle.repository.js";
@@ -23,4 +23,14 @@ export const authRoutes: FastifyPluginAsync = async (app, options) => {
     }
 
     app.post('/register', { schema: registerSchema }, authController.registerNewUser);
+    
+    const loginSchema = {
+        body: userLoginDTOSchema,
+        response: { 
+            // TODO: Response Schema
+        }
+    }
+
+    app.post('/login', { schema: loginSchema }, authController.loginUser);
+    
 }

@@ -14,7 +14,7 @@ export class MockRepository implements UserRepository {
     }
 
     async create(user: NewUser): Promise<User | null> {
-        const newUser = { ...user, id: this.i++, createdAt: new Date(), updatedAt: new Date() }; // Generate a unique ID and set timestamps
+        const newUser = { ...user, id: this.i++, tokenVersion: 0, createdAt: new Date(), updatedAt: new Date() }; // Generate a unique ID, default token version and set timestamps
         this.users.push(newUser);
         return newUser;
     }

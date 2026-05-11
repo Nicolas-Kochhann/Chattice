@@ -1,11 +1,14 @@
+import { compareSync, hashSync } from "bcrypt";
+import jwt from "jsonwebtoken";
 import { CreateUserDTO, LoginUserDTO, NewUser, User } from "../users/user.types.js";
 import { UserRepository } from "../users/repositories/user.repository.js";
-import { compareSync, hashSync } from "bcrypt";
-import { EmailAlreadyExistsError } from "./auth.errors.js";
+import { EmailAlreadyExistsError, InvalidCredentialsError } from "./auth.errors.js";
+import { env } from "../../env.js";
 
 export class AuthService
 {
     constructor(private repository: UserRepository){}
+
 
     async registryUser({ name, email, password }: CreateUserDTO)
     {
@@ -15,25 +18,39 @@ export class AuthService
 
         const newUser = { name: name, email: email, passwordHash: hashSync(password, 10)}
 
-        const responseUser = await this.repository.create(newUser);
+        const responseUser = await this.repository.create(newUser)
 
-        // TODO: token = generateToken(user);
-        // Return { responseUser, token };
+        const token = this.generateToken(responseUser!);
+        const refreshToken = this.generateRefreshToken(responseUser!);
 
-        return responseUser;
+        return { user: responseUser, token: token, refreshToken: refreshToken };
     }
     
+
     async authenticate({ email, password }: LoginUserDTO)
     {
         const user = await this.repository.findByEmail(email);
 
         if(!user || !compareSync(password, user.passwordHash)){
-            return null;
+            throw new InvalidCredentialsError();
         }
 
-        // TODO: token = generateToken(user);
-        // return { user, token };
+        const token = this.generateToken(user);
+        const refreshToken = this.generateRefreshToken(user);
 
-        return user;
+        return { user: user, token: token, refreshToken: refreshToken };
     }
+
+
+    private generateToken({ id, name, email }: User): string
+    {
+        return jwt.sign({ id: id, name: name, email: email }, env.API_KEY, { expiresIn: 60 * 15 });
+    }
+
+
+    private generateRefreshToken({ id, tokenVersion }: User): string
+    {
+        return jwt.sign({ sub: id, version: tokenVersion }, env.API_REFRESH_KEY, { algorithm: "HS512", expiresIn: 60 * 60 * 24 * 15 });
+    }
+
 }

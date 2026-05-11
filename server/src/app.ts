@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
-import { validatorCompiler, serializerCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
 import WebSocket from '@fastify/websocket';
-import { env } from './env.js';
+import Cookie from '@fastify/cookie';
+import { validatorCompiler, serializerCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
 import { authRoutes } from './modules/auth/auth.routes.js';
 
 export async function buildApp(options: object = {})
@@ -11,6 +11,9 @@ export async function buildApp(options: object = {})
     // Configure zod as type provider.
     app.setValidatorCompiler(validatorCompiler);
     app.setSerializerCompiler(serializerCompiler);
+
+    // Cookies setter plugin
+    await app.register(Cookie);
 
     // Register WebSocket plugin.
     await app.register(WebSocket);

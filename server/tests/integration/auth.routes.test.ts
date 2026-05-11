@@ -23,7 +23,7 @@ suite('Auth Routes', () => {
         await downTestPostgresContainer(container);
     });
 
-    test('POST /auth/register - success', async () => {
+    test('POST /auth/register', async () => {
         const response = await app.inject({
             method: 'POST',
             url: '/auth/register',
@@ -47,5 +47,28 @@ suite('Auth Routes', () => {
         assert(body.user.email === 'test@example.com');
 
     });
+
+    test('POST /auth/login', async () => {
+        const response = await app.inject({
+            method: 'POST',
+            url: '/auth/login',
+            headers: { 'content-type': 'application/json' },
+            payload: {
+                email: 'test@example.com',
+                password: 'password123'
+            }
+        });
+
+        assert(response.statusCode === 200);
+        assert(response.headers['content-type'] === 'application/json; charset=utf-8');
+        
+        const body = response.json();
+
+        console.log(body.name, body.email)
+
+        assert(body.user.id === 1);
+        assert(body.user.name === 'John Doe');
+        assert(body.user.email === 'test@example.com');
+    })
 
 });

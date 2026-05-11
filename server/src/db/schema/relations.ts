@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { users, chats, messages, chatsUsers } from "./index.js";
 
 export const usersRelations = relations(users, ({ many }) => ({
-    sendedMessages: many(messages),
+    sendedMessages: many(messages, { relationName: 'sended_messages' }),
     chatsUsers: many(chatsUsers)
 }));
 
