@@ -44,7 +44,7 @@ export class AuthService
 
     private generateToken({ id, name, email }: User): string
     {
-        return jwt.sign({ id: id, name: name, email: email }, env.API_KEY, { expiresIn: 60 * 15 });
+        return jwt.sign({ sub: id, name: name, email: email }, env.API_KEY, { expiresIn: 60 * 15 });
     }
 
 
