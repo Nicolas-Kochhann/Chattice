@@ -7,8 +7,10 @@ import { env } from "../../env.js";
 
 export class AuthService
 {
-    constructor(private repository: UserRepository){}
+    public static TOKEN_TTL = 60 * 15;
+    public static REFRESH_TOKEN_TTL = 60 * 60 * 24 * 7;
 
+    constructor(private repository: UserRepository){}
 
     async registryUser({ name, email, password }: CreateUserDTO)
     {
@@ -44,13 +46,13 @@ export class AuthService
 
     private generateToken({ id, name, email }: User): string
     {
-        return jwt.sign({ sub: id, name: name, email: email }, env.API_KEY, { expiresIn: 60 * 15 });
+        return jwt.sign({ sub: id, name: name, email: email }, env.API_KEY, { expiresIn: AuthService.TOKEN_TTL });
     }
 
 
     private generateRefreshToken({ id, tokenVersion }: User): string
     {
-        return jwt.sign({ sub: id, version: tokenVersion }, env.API_REFRESH_KEY, { algorithm: "HS512", expiresIn: 60 * 60 * 24 * 15 });
+        return jwt.sign({ sub: id, version: tokenVersion }, env.API_REFRESH_KEY, { algorithm: "HS512", expiresIn: AuthService.REFRESH_TOKEN_TTL });
     }
 
 }
