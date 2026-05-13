@@ -28,21 +28,15 @@ export class AuthController {
       user: createUserResponseDTO(user),
     };
 
-    reply.setCookie('api_token', token, {
-      path: '/',
-      secure: true,
-      httpOnly: true,
-      sameSite: 'lax'
-    });
-  
-    reply.setCookie('refresh_token', refreshToken, {
-      path: '/',
-      secure: true,
-      httpOnly: true,
-      sameSite: 'lax'
-    })
-
-    return reply.status(201).send(response);
+    return reply
+      .headers({
+        "x-api-token": token,
+        "x-api-token-ttl": AuthService.TOKEN_TTL,
+        "x-refresh-token": refreshToken,
+        "x-refresh-token-ttl": AuthService.REFRESH_TOKEN_TTL
+      })
+      .status(201)
+      .send(response);
   }
 
   
@@ -62,20 +56,14 @@ export class AuthController {
       user: createUserResponseDTO(user),
     };
 
-    reply.setCookie('api_token', token, {
-      path: '/',
-      secure: true,
-      httpOnly: true,
-      sameSite: 'lax'
-    });
-  
-    reply.setCookie('refresh_token', refreshToken, {
-      path: '/',
-      secure: true,
-      httpOnly: true,
-      sameSite: 'lax'
-    })
-
-    return reply.status(200).send(response);
+    return reply
+      .headers({
+        "x-api-token": token,
+        "x-api-token-ttl": AuthService.TOKEN_TTL,
+        "x-refresh-token": refreshToken,
+        "x-refresh-token-ttl": AuthService.REFRESH_TOKEN_TTL
+      })
+      .status(200)
+      .send(response);
   }
 }
