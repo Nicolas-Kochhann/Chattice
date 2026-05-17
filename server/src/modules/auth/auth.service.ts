@@ -1,8 +1,8 @@
 import { compareSync, hashSync } from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { CreateUserDTO, LoginUserDTO, NewUser, User } from "../users/user.types.js";
 import { UserRepository } from "../users/repositories/user.repository.js";
-import { EmailAlreadyExistsError, InvalidCredentialsError } from "./auth.errors.js";
+import { EmailAlreadyExistsError, InvalidCredentialsError, TokenExpiredError, TokenInvalidError, TokenNotBeforeError } from "./auth.errors.js";
 import { env } from "../../env.js";
 
 export class AuthService
@@ -44,7 +44,7 @@ export class AuthService
     }
 
 
-    private generateToken({ id, name, email }: User): string
+    generateToken({ id, name, email }: User): string
     {
         return jwt.sign({ sub: id, name: name, email: email }, env.API_KEY, { expiresIn: AuthService.TOKEN_TTL });
     }
@@ -53,6 +53,30 @@ export class AuthService
     private generateRefreshToken({ id, tokenVersion }: User): string
     {
         return jwt.sign({ sub: id, version: tokenVersion }, env.API_REFRESH_KEY, { algorithm: "HS512", expiresIn: AuthService.REFRESH_TOKEN_TTL });
+    }
+
+
+    public verifyToken(token: string): JwtPayload
+    {
+        try {
+            return jwt.verify(token, env.API_KEY) as JwtPayload;
+        } catch (err: any) {
+            if(err.name === 'TokenExpiredError') throw new TokenExpiredError();
+            else if(err.name = 'NotBeforeError') throw new TokenNotBeforeError();
+            else throw new TokenInvalidError();
+        }
+    }
+
+
+    public verifyRefreshToken(refreshToken: string): JwtPayload
+    {
+        try {
+            return jwt.verify(refreshToken, env.API_REFRESH_KEY) as JwtPayload;
+        } catch (err: any) {
+            if(err.name === 'TokenExpiredError') throw new TokenExpiredError();
+            else if(err.name = 'NotBeforeError') throw new TokenNotBeforeError();
+            else throw new TokenInvalidError();
+        }
     }
 
 }
