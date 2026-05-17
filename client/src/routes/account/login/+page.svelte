@@ -25,7 +25,7 @@
 				<input class="border rounded p-2" type="password" name="password" id="password" />
 			</div>
 			<div class="mt-4 mx-2 flex flex-col">
-				<button class="bg-amber-200 p-2 rounded hover:bg-amber-300 transition cursor-pointer" type="submit">Log in</button>
+				<button class="bg-amber-200 p-2 rounded hover:bg-amber-300 transition cursor-pointer" type="submit">Log In</button>
 				<p class="text-center mt-3">Don't have an account yet? <a class="text-blue-500 underline cursor-pointer hover:text-blue-600" href={resolve('/account/signup')}>Sign Up</a></p>
 			</div>
 		</form>
