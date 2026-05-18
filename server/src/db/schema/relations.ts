@@ -6,12 +6,12 @@ export const usersRelations = relations(users, ({ many }) => ({
     chatsUsers: many(chatsUsers)
 }));
 
-const chatsRelations = relations(chats, ({ many }) => ({
+export const chatsRelations = relations(chats, ({ many }) => ({
     messages: many(messages),
     users: many(chatsUsers)
 }));
 
-const messagesRelations = relations(messages, ({ one }) => ({
+export const messagesRelations = relations(messages, ({ one }) => ({
     author: one(users, {
         fields: [messages.authorId],
         references: [users.id]
@@ -22,7 +22,7 @@ const messagesRelations = relations(messages, ({ one }) => ({
     })
 }));
 
-const chatsUsersRelations = relations(chatsUsers, ({ one }) => ({
+export const chatsUsersRelations = relations(chatsUsers, ({ one }) => ({
     user: one(users, {
         fields: [chatsUsers.userId],
         references: [users.id],
