@@ -1,6 +1,12 @@
 <script>
 	import { enhance } from '$app/forms';
 	import { resolve } from '$app/paths';
+	import Carrossel from '$lib/components/Carrossel.svelte';
+
+	const messages = [
+		"lebanon james",
+		"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia ipsum recusandae voluptatem provident, tempora illum, deserunt in libero aut eaque, minus perspiciatis dolorem consequatur suscipit minima maiores a consectetur ducimus!"
+	]
 </script>
 
 <svelte:head>
@@ -11,7 +17,7 @@
 	<div class="lg:w-1/2 grid grid-cols-2 rounded border">
 		<div class="bg-amber-100 px-3 py-5 flex flex-col justify-between">
 			<h2 class="text-center text-2xl font-bold">Welcome</h2>
-            <p class="text-justify mx-3 my-6">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsum quisquam nisi unde eos ullam ut doloribus eum in mollitia at vero itaque commodi ad esse excepturi, illum, nobis architecto blanditiis?</p>
+            <Carrossel {messages} duration={7000} />
             <p class="text-center"><strong>Chattice™</strong></p>
 		</div>
 		<form action="?/login" method="POST" class="px-3 py-5 shadow" use:enhance>
