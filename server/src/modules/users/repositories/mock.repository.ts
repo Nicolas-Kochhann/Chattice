@@ -13,7 +13,7 @@ export class MockRepository implements UserRepository {
         return this.users.find(user => user.email === email) || null;
     }
 
-    async create(user: NewUser): Promise<User | null> {
+    async create(user: NewUser): Promise<User> {
         const newUser = { ...user, id: this.i++, tokenVersion: 0, createdAt: new Date(), updatedAt: new Date() }; // Generate a unique ID, default token version and set timestamps
         this.users.push(newUser);
         return newUser;

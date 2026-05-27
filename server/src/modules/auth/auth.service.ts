@@ -22,8 +22,8 @@ export class AuthService
 
         const responseUser = await this.repository.create(newUser)
 
-        const token = this.generateToken(responseUser!);
-        const refreshToken = this.generateRefreshToken(responseUser!);
+        const token = this.generateToken(responseUser);
+        const refreshToken = this.generateRefreshToken(responseUser);
 
         return { user: responseUser, token: token, refreshToken: refreshToken };
     }

@@ -25,7 +25,7 @@ export class DrizzleRepository implements UserRepository
         return result;
     }
 
-    async create(user: NewUser): Promise<User|null>
+    async create(user: NewUser): Promise<User>
     {
             // Destructuring because returning() function returns an array.
             const [result] = await db.insert(users).values(user).returning({ 
