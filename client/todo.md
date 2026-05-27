@@ -1,1 +1,2 @@
-> establish connection to ws server
+> Authentication
+> Design revamp

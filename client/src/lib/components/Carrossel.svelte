@@ -21,7 +21,7 @@
     {#key counter}
         <p 
             in:fade={{ delay: 750 }} 
-            out:fade 
+            out:fade
             class="absolute inset-0 flex items-center justify-center"
         >
             {currentMessage}
