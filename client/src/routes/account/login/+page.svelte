@@ -1,12 +1,35 @@
-<script>
+<script lang='ts'>
 	import { enhance } from '$app/forms';
 	import { resolve } from '$app/paths';
 	import Carrossel from '$lib/components/Carrossel.svelte';
+	import eyeIcon from '$lib/assets/icons/eye.svg';
+	import crossedEyeIcon from '$lib/assets/icons/eye-crossed.svg';
+	import { slide } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+	import { page } from '$app/state';
+	import type { PageProps } from './$types';
+
+	let { form }: PageProps = $props();
+
+	let showPassword = $state(false);
+	let warningVisible = $state(true);
+	let submitting = $state(false);
+	let passwordContent = $state('');
+
+	let message = page.url.searchParams.get('message');
 
 	const messages = [
-		"lebanon james",
-		"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia ipsum recusandae voluptatem provident, tempora illum, deserunt in libero aut eaque, minus perspiciatis dolorem consequatur suscipit minima maiores a consectetur ducimus!"
-	]
+		'lebanon james',
+		'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia ipsum recusandae voluptatem provident, tempora illum, deserunt in libero aut eaque, minus perspiciatis dolorem consequatur suscipit minima maiores a consectetur ducimus!'
+	];
+
+	function toggleShowPassword() {
+		showPassword = !showPassword;
+	}
+
+	function hideError() {
+		warningVisible = false;
+	}
 </script>
 
 <svelte:head>
@@ -14,25 +37,83 @@
 </svelte:head>
 
 <div class="flex h-screen w-screen items-center justify-center">
-	<div class="lg:w-1/2 grid grid-cols-2 rounded border">
-		<div class="bg-amber-100 px-3 py-5 flex flex-col justify-between">
+	<div class="grid grid-cols-2 rounded border shadow-md lg:w-1/2">
+		<div class="flex flex-col justify-between bg-amber-100 px-3 py-5">
 			<h2 class="text-center text-2xl font-bold">Welcome</h2>
-            <Carrossel {messages} duration={7000} />
-            <p class="text-center"><strong>Chattice™</strong></p>
+			<Carrossel {messages} duration={7000} />
+			<p class="text-center"><strong>Chattice™</strong></p>
 		</div>
-		<form action="?/login" method="POST" class="px-3 py-5 shadow" use:enhance>
-			<h2 class="text-center text-2xl font-bold mb-4">Log in</h2>
-			<div class="flex flex-col m-2">
-				<label class="text-gray-900 text-lg" for="email">E-mail</label>
-				<input class="border rounded p-2" type="email" name="email" id="email" />
+		<form action="?/login" method="POST" class="px-3 py-5 shadow" use:enhance={() => {
+			submitting = true;
+
+			return async ({ update }) => {
+				await update();
+				submitting = false;
+				warningVisible = true;
+				passwordContent = '';
+			}
+		}}>
+			
+			<h2 class="mb-4 text-center text-2xl font-bold">Log in</h2>
+			{#if message && warningVisible && !submitting && !form} <!--form object doesn't exist-->
+				<div
+					in:slide
+					out:slide={{ easing: cubicOut }}
+					class="m-2 flex flex-row items-center rounded border border-blue-600 bg-blue-50 p-2 text-blue-600"
+				>
+					{message}
+					<button type="button" onclick={hideError} class="ml-auto cursor-pointer">X</button>
+				</div>
+			{:else if form?.error && warningVisible && !submitting}
+				<div
+					in:slide
+					out:slide={{ easing: cubicOut }}
+					class="m-2 flex flex-row items-center rounded border border-amber-600 bg-yellow-50 p-2 text-amber-600"
+				>
+					{form.error}
+					<button type="button" onclick={hideError} class="ml-auto cursor-pointer">X</button>
+				</div>
+			{/if}
+			<div class="m-2 flex flex-col">
+				<label class="text-lg text-gray-900" for="email">E-mail</label>
+				<input class="rounded border p-2" type="email" name="email" id="email" />
 			</div>
-			<div class="flex flex-col m-2">
-				<label class="text-gray-900 text-lg" for="password">Password</label>
-				<input class="border rounded p-2" type="password" name="password" id="password" />
+			<div class="m-2 flex flex-col">
+				<label class="text-lg text-gray-900" for="password">Password</label>
+				<div class="relative flex">
+					<input
+						type={showPassword ? 'text' : 'password'}
+						name="password"
+						id="password"
+						required
+						class="w-full rounded border p-2"
+						bind:value={passwordContent}
+					/>
+					<button
+						type="button"
+						onclick={toggleShowPassword}
+						class="absolute right-0 h-full cursor-pointer p-2"
+					>
+						<img
+							src={showPassword ? crossedEyeIcon : eyeIcon}
+							alt="show"
+							class="h-full"
+						/>
+					</button>
+				</div>
 			</div>
-			<div class="mt-4 mx-2 flex flex-col">
-				<button class="bg-amber-200 p-2 rounded hover:bg-amber-300 transition cursor-pointer" type="submit">Log In</button>
-				<p class="text-center mt-3">Don't have an account yet? <a class="text-blue-500 underline cursor-pointer hover:text-blue-600" href={resolve('/account/signup')}>Sign Up</a></p>
+			<div class="mx-2 mt-8 flex flex-col">
+				<button
+					class="cursor-pointer rounded bg-amber-200 p-2 transition border border-transparent hover:bg-amber-300 disabled:border-amber-300 disabled:text-amber-300 disabled:bg-transparent disabled:cursor-default"
+					disabled={submitting}
+					type="submit">{submitting ? '...' : 'Log in'}</button
+				>
+				<p class="mt-3 text-center">
+					Don't have an account yet? <a
+						class="cursor-pointer text-blue-500 underline hover:text-blue-600"
+						href={resolve('/account/signup')}>Sign Up</a
+					>
+				</p>
 			</div>
 		</form>
 	</div>
