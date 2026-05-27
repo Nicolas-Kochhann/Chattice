@@ -9,7 +9,8 @@ const envSchema = z.object({
     POSTGRES_NAME: z.string().default("chattice"),
     POSTGRES_USER: z.string().default("root"),
     POSTGRES_SECRET: z.string(),
-    POSTGRES_SSL_SUPPORT: z.coerce.boolean().default(false)
+    POSTGRES_SSL_SUPPORT: z.coerce.boolean().default(false),
+    MESSAGE_LIMIT_PER_REQUEST: z.coerce.number().default(20)
 });
 
 export const env = envSchema.parse(process.env);
