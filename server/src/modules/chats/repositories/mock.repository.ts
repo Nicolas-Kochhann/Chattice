@@ -1,6 +1,7 @@
 import { Chat, NewChat } from "../chat.types.js";
 import { Message } from "../../messages/message.types.js";
 import { ChatRepository } from "./chat.repository.js";
+import { env } from "../../../env.js";
 
 export class MockRepository implements ChatRepository {
     private chats: Chat[] = [];
@@ -13,17 +14,30 @@ export class MockRepository implements ChatRepository {
         return this.chats.find((chat) => chat.id === id) || null;
     }
 
-    async getMessages(id: number, cursor: number): Promise<Message[] | null> 
+    async findMessages(id: number, cursor?: number): Promise<Message[] | null> 
     {
-        const chat = await this.findById(id);
-        if (!chat) return null;
-
-        return this.messages
-            .filter((message) => message.chatId === id && message.id > cursor)
-            .sort((a, b) => a.id - b.id);
+        const msgs = this.messages.filter((message) => message.chatId === id);
+        
+        if (cursor) {
+            return msgs
+                .filter((message) => message.id < cursor)
+                .sort((a, b) => b.id - a.id)
+                .slice(0, env.MESSAGE_LIMIT_PER_REQUEST);
+        }
+        
+        return msgs.sort((a, b) => b.id - a.id).slice(0, env.MESSAGE_LIMIT_PER_REQUEST);
     }
 
-    async create(chat: NewChat): Promise<Chat | null> 
+    async findLastMessage({ id }: Chat): Promise<Message | null> 
+    {
+        const msgs = this.messages.filter((message) => message.chatId === id);
+        if (msgs.length === 0) return null;
+
+        msgs.sort((a, b) => b.id - a.id);
+        return msgs[0];
+    }
+
+    async create(chat: NewChat): Promise<Chat> 
     {
         const newChat: Chat = {
             ...chat,
@@ -34,6 +48,10 @@ export class MockRepository implements ChatRepository {
 
         this.chats.push(newChat);
         return newChat;
+    }
+
+    addMessage(message: Message): void {
+        this.messages.push(message);
     }
 
     async delete(id: number): Promise<void> 
