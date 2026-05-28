@@ -1,2 +1,1 @@
-> Authentication
-> Design revamp
+> Route protection
