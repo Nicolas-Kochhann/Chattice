@@ -20,7 +20,7 @@ export class DrizzleRepository implements ChatRepository
         return result;
     };
 
-    async findMessages(id: number, cursor?: number): Promise<Message[]|null> 
+    async findMessages(id: number, cursor?: number): Promise<Message[]> 
     {
         let result;
 

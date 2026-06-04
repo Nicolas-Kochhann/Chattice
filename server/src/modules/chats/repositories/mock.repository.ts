@@ -14,7 +14,7 @@ export class MockRepository implements ChatRepository {
         return this.chats.find((chat) => chat.id === id) || null;
     }
 
-    async findMessages(id: number, cursor?: number): Promise<Message[] | null> 
+    async findMessages(id: number, cursor?: number): Promise<Message[]> 
     {
         const msgs = this.messages.filter((message) => message.chatId === id);
         
