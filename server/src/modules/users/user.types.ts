@@ -2,9 +2,9 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { users } from "../../db/schema/users.js";
 
-const userSelectSchema = createSelectSchema(users);
+export const userSelectSchema = createSelectSchema(users);
 
-const userInsertSchema = createInsertSchema(users).omit({
+export const userInsertSchema = createInsertSchema(users).omit({
     createdAt: true,
     updatedAt: true
 });
