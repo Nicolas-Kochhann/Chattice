@@ -1,5 +1,5 @@
 import { Chat, NewChat } from "../chat.types.js";
-import { Message } from "../../messages/message.types.js";
+import { Message, NewMessage } from "../../messages/message.types.js";
 import { User } from "../../users/user.types.js";
 import { ChatRepository } from "./chat.repository.js";
 import { env } from "../../../env.js";
@@ -10,6 +10,7 @@ export class MockRepository implements ChatRepository {
     private chatUsers = new Map<number, number[]>();
     private chatIdCounter = 1;
     private messageIdCounter = 1;
+    private authorIdCounter = 1;
 
     async findById(id: number): Promise<Chat | null> {
         const chat = this.chats.find((item) => item.id === id);
@@ -82,8 +83,19 @@ export class MockRepository implements ChatRepository {
         return newChat;
     }
 
-    addMessage(message: Message): void {
-        this.messages.push(message);
+    async createMessage(message: NewMessage): Promise<Message> {
+        const newMessage = {
+            ...message,
+            authorId: this.authorIdCounter,
+            id: this.messageIdCounter,
+        } as Message;
+
+        this.authorIdCounter++;
+        this.messageIdCounter++;
+        
+        this.messages.push(newMessage);
+        
+        return newMessage;
     }
 
     async delete(id: number): Promise<void> {

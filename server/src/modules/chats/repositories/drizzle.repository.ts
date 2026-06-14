@@ -1,6 +1,6 @@
 import { ChatRepository } from "./chat.repository.js";
 import { Chat, NewChat } from "../chat.types.js";
-import { Message } from "../../messages/message.types.js";
+import { Message, NewMessage } from "../../messages/message.types.js";
 import { db } from "../../../db/connection.js";
 import { chats } from "../../../db/schema/chats.js"
 import { and, desc, eq, lt, sql } from "drizzle-orm";
@@ -130,6 +130,18 @@ export class DrizzleRepository implements ChatRepository
 
         return result;
     };
+
+    async createMessage(message: Message): Promise<Message> {
+        const [ result ] = await db.insert(messages).values(message).returning({
+            id: messages.id,
+            text: messages.text,
+            authorId: messages.authorId,
+            chatId: messages.chatId,
+            createdAt: messages.createdAt
+        });
+
+        return result;
+    }
 
     async create(chat: NewChat, claimantId: number, guestId: number): Promise<Chat> 
     {
