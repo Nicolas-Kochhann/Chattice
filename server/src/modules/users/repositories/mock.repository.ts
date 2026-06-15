@@ -1,7 +1,7 @@
 import { User, NewUser } from "../user.types.js";
 import { UserRepository } from "./user.repository.js";
 
-export class MockRepository implements UserRepository {
+export class MockUserRepository implements UserRepository {
     private users: User[] = [];
     private i = 1;
 

@@ -3,7 +3,7 @@ import { Chat, NewChat } from "./chat.types.js";
 import { ChatRepository } from "./repositories/chat.repository.js";
 import { DomainError } from "../../errors/domain.error.js";
 import { ChatDoesNotExists } from "./chat.errors.js";
-import { Message } from "../messages/message.types.js";
+import { CreateMessageDTO, Message, NewMessage } from "../messages/message.types.js";
 import { createUserResponseDTO } from "../users/user.mapper.js";
 import { User } from "../users/user.types.js";
 

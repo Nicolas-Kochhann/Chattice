@@ -11,7 +11,7 @@ import { users } from "../../../db/schema/users.js";
 import { User } from "../../users/user.types.js";
 
 
-export class DrizzleRepository implements ChatRepository
+export class DrizzleChatRepository implements ChatRepository
 {
     async findById(id: number): Promise<Chat|null> 
     {
@@ -130,18 +130,6 @@ export class DrizzleRepository implements ChatRepository
 
         return result;
     };
-
-    async createMessage(message: Message): Promise<Message> {
-        const [ result ] = await db.insert(messages).values(message).returning({
-            id: messages.id,
-            text: messages.text,
-            authorId: messages.authorId,
-            chatId: messages.chatId,
-            createdAt: messages.createdAt
-        });
-
-        return result;
-    }
 
     async create(chat: NewChat, claimantId: number, guestId: number): Promise<Chat> 
     {

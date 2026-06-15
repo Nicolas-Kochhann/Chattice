@@ -3,11 +3,11 @@ import { FastifyPluginAsync } from "fastify";
 import { userCreateDTOSchema, userLoginDTOSchema, userResponseDTOSchema } from "../users/user.types.js";
 import { errorResponseSchema } from "../../errors/error.schema.js";
 import { AuthService } from "./auth.service.js";
-import { DrizzleRepository } from "../users/repositories/drizzle.repository.js";
+import { DrizzleUserRepository } from "../users/repositories/drizzle.repository.js";
 
 export const authRoutes: FastifyPluginAsync = async (app, options) => {
 
-    const authController = new AuthController(new AuthService(new DrizzleRepository()));
+    const authController = new AuthController(new AuthService(new DrizzleUserRepository()));
 
     const registerSchema = {
         body: userCreateDTOSchema,

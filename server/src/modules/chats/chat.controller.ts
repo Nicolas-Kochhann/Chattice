@@ -2,17 +2,15 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ChatService } from "./chat.service.js";
 import { CreateChatDTO, GetMessagesParams } from "./chat.types.js";
 
-export class ChatController 
-{
+export class ChatController {
     private readonly service: ChatService;
 
-    constructor(service: ChatService){
+    constructor(service: ChatService) {
         this.service = service;
         this.createChat = this.createChat.bind(this);
     }
 
-    async createChat(request: FastifyRequest<{ Body: CreateChatDTO }>, reply: FastifyReply)
-    {
+    async createChat(request: FastifyRequest<{ Body: CreateChatDTO }>, reply: FastifyReply) {
         // No chat groups yet.
         const claimantId = request.user!.id;
         const guestId = request.body.guest_id;
@@ -22,8 +20,7 @@ export class ChatController
         return reply.status(201).send(response);
     }
 
-    async getChats(request: FastifyRequest, reply: FastifyReply)
-    {
+    async getChats(request: FastifyRequest, reply: FastifyReply) {
         const userId = request.user!.id;
 
         const response = await this.service.getChats(userId);
@@ -31,8 +28,7 @@ export class ChatController
         return reply.status(200).send(response);
     }
 
-    async getChatMessages(request: FastifyRequest<{ Params: GetMessagesParams }>, reply: FastifyReply)
-    {
+    async getChatMessages(request: FastifyRequest<{ Params: GetMessagesParams }>, reply: FastifyReply) {
         const { id } = request.params;
 
         const response = await this.service.getChatMessages(id);

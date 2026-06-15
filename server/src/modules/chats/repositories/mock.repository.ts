@@ -4,7 +4,7 @@ import { User } from "../../users/user.types.js";
 import { ChatRepository } from "./chat.repository.js";
 import { env } from "../../../env.js";
 
-export class MockRepository implements ChatRepository {
+export class MockChatRepository implements ChatRepository {
     private chats: Chat[] = [];
     private messages: Message[] = [];
     private chatUsers = new Map<number, number[]>();
@@ -83,18 +83,14 @@ export class MockRepository implements ChatRepository {
         return newChat;
     }
 
-    async createMessage(message: NewMessage): Promise<Message> {
-        const newMessage = {
+    async createMessage(message: Message): Promise<Message> {
+        const newMessage: Message = {
             ...message,
-            authorId: this.authorIdCounter,
-            id: this.messageIdCounter,
+            id: message.id ?? this.messageIdCounter++,
+            createdAt: message.createdAt ?? new Date(),
         } as Message;
 
-        this.authorIdCounter++;
-        this.messageIdCounter++;
-        
         this.messages.push(newMessage);
-        
         return newMessage;
     }
 

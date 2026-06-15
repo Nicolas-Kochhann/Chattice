@@ -3,7 +3,7 @@ import { UserRepository } from "./user.repository.js";
 import { db } from "../../../db/connection.js";
 import { users } from "../../../db/schema/users.js";
 
-export class DrizzleRepository implements UserRepository 
+export class DrizzleUserRepository implements UserRepository 
 {
     async findById(id: number): Promise<User|null> 
     {

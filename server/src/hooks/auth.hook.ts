@@ -1,12 +1,12 @@
 import { FastifyPluginAsync } from "fastify";
 import { AuthService } from "../modules/auth/auth.service.js";
-import { DrizzleRepository } from "../modules/users/repositories/drizzle.repository.js";
+import { DrizzleUserRepository } from "../modules/users/repositories/drizzle.repository.js";
 import { AuthorizationFailedError } from "../modules/auth/auth.errors.js";
 
 export const authHook: FastifyPluginAsync = async (app, options) => {
 
     app.addHook("onRequest", async (request, reply) => {
-        const userRepository = new DrizzleRepository();
+        const userRepository = new DrizzleUserRepository();
         const authService = new AuthService(userRepository);
 
         if(request.headers.authorization) {

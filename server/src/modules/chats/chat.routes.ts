@@ -1,13 +1,13 @@
 import { FastifyPluginAsync } from "fastify";
 import { ChatController } from "./chat.controller.js";
 import { ChatService } from "./chat.service.js";
-import { DrizzleRepository } from "./repositories/drizzle.repository.js";
+import { DrizzleChatRepository } from "./repositories/drizzle.repository.js";
 import { chatCreateDTOSchema, chatGetMessagesSchema } from "./chat.types.js";
 
 
 export const chatRoutes: FastifyPluginAsync = async (app, options) => {
 
-    const controller = new ChatController(new ChatService(new DrizzleRepository()));
+    const controller = new ChatController(new ChatService(new DrizzleChatRepository()));
 
     const createSchema = {
         body: chatCreateDTOSchema
