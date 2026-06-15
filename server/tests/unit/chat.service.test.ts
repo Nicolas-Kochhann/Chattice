@@ -3,7 +3,6 @@ import { strict as assert } from 'node:assert';
 import { ChatService } from "../../src/modules/chats/chat.service.js";
 import { MockChatRepository } from "../../src/modules/chats/repositories/mock.repository.js";
 import { ChatDoesNotExists } from "../../src/modules/chats/chat.errors.js";
-import { Message } from "../../src/modules/messages/message.types.js";
 
 suite('ChatService', () => {
 
