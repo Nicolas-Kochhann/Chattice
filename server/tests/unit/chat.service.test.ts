@@ -1,14 +1,14 @@
 import test, { suite } from "node:test";
 import { strict as assert } from 'node:assert';
 import { ChatService } from "../../src/modules/chats/chat.service.js";
-import { MockRepository } from "../../src/modules/chats/repositories/mock.repository.js";
+import { MockChatRepository } from "../../src/modules/chats/repositories/mock.repository.js";
 import { ChatDoesNotExists } from "../../src/modules/chats/chat.errors.js";
 import { Message } from "../../src/modules/messages/message.types.js";
 
 suite('ChatService', () => {
 
     test('ChatService - Create success', async () => {
-        const chatService = new ChatService(new MockRepository());
+        const chatService = new ChatService(new MockChatRepository());
         
         const result = await chatService.create({ isGroup: false }, 1, 2);
 
@@ -18,7 +18,7 @@ suite('ChatService', () => {
     });
 
     test('ChatService - Get chats success', async () => {
-        const repository = new MockRepository();
+        const repository = new MockChatRepository();
         const chatService = new ChatService(repository);
 
         await repository.create({ isGroup: false }, 1, 2);
@@ -35,7 +35,7 @@ suite('ChatService', () => {
     });
 
     test('ChatService - Get chat success', async () => {
-        const repository = new MockRepository();
+        const repository = new MockChatRepository();
         const chatService = new ChatService(repository);
 
         await repository.create({ isGroup: false }, 1, 2);
@@ -48,7 +48,7 @@ suite('ChatService', () => {
     });
 
     test('ChatService - Get chat not found', async () => {
-        const chatService = new ChatService(new MockRepository());
+        const chatService = new ChatService(new MockChatRepository());
 
         await assert.rejects(
             async () => { await chatService.getChat(1); },
@@ -60,7 +60,7 @@ suite('ChatService', () => {
     });
 
     test('ChatService - Get chat messages success', async () => {
-        const repository = new MockRepository();
+        const repository = new MockChatRepository();
         const chatService = new ChatService(repository);
 
         await repository.create({ isGroup: false }, 1, 2);
