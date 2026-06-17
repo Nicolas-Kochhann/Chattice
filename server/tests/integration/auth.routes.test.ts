@@ -5,6 +5,7 @@ import { execSync } from 'node:child_process';
 import { strict as assert } from 'node:assert';
 import { buildApp } from '../../src/app.js';
 import { upTestPostgresContainer, downTestPostgresContainer } from '../test.utils.js';
+import { env } from '../../src/env.js';
 import { pool } from '../../src/db/connection.js';
 
 suite('Auth Routes', () => {
@@ -13,7 +14,7 @@ suite('Auth Routes', () => {
 
     before(async () => {
         container = await upTestPostgresContainer();
-        execSync('drizzle-kit migrate');
+        execSync("npm run migrations:migrate");
         app = await buildApp();
     });
 
@@ -35,12 +36,13 @@ suite('Auth Routes', () => {
             }
         });
 
+        console.log(response.json());
+
         assert(response.statusCode === 201);
         assert(response.headers['content-type'] === 'application/json; charset=utf-8');
+        assert(response.headers['x-api-token'] && response.headers['x-refresh-token']);
         
         const body = response.json();
-
-        console.log(body.name, body.email)
 
         assert(body.user.id === 1);
         assert(body.user.name === 'John Doe');
