@@ -3,7 +3,7 @@ import { Chat, NewChat } from "../chat.types.js";
 import { Message, NewMessage } from "../../messages/message.types.js";
 import { db } from "../../../db/connection.js";
 import { chats } from "../../../db/schema/chats.js"
-import { and, desc, eq, lt, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, lt, sql } from "drizzle-orm";
 import { messages } from "../../../db/schema/messages.js";
 import { env } from "../../../env.js";
 import { chatsUsers } from "../../../db/schema/users.chats.js";
@@ -58,6 +58,11 @@ export class DrizzleChatRepository implements ChatRepository
         const userChats: Chat[] = await db.transaction(async (tx) => {
             const foundChats: Chat[] = [];
 
+            const userChatIds = tx
+                .select({ chatId: chatsUsers.chatId })
+                .from(chatsUsers)
+                .where(eq(chatsUsers.userId, userId));
+
             const subquery = tx
                 .select()
                 .from(messages)
@@ -72,22 +77,26 @@ export class DrizzleChatRepository implements ChatRepository
                 .innerJoin(chatsUsers, eq(chatsUsers.chatId, chats.id))
                 .innerJoin(users, eq(users.id, chatsUsers.userId))
                 .leftJoinLateral(subquery, sql`TRUE`)
-                .where(eq(chatsUsers.userId, userId))
+                .where(inArray(chats.id, userChatIds))
                 .orderBy(desc(chats.updatedAt));
 
-            for(let i = 0; i < result.length; i++){
-                const chat: Chat = {
-                    ...result[i].chats,
-                    users: result
-                        .filter(r => r.chats.id === result[i].chats.id)
-                        .map(r => r.users),
-                    lastMessage: result[i].last_message
+            const chatMap = new Map<number, Chat>();
+
+            for (const row of result) {
+                const chatId = row.chats.id;
+
+                if (!chatMap.has(chatId)) {
+                    chatMap.set(chatId, {
+                        ...row.chats,
+                        users: [],
+                        lastMessage: row.last_message
+                    });
                 }
 
-                foundChats.push(chat);
+                chatMap.get(chatId)!.users!.push(row.users);
             }
 
-            return foundChats;
+            return Array.from(chatMap.values());
         });
 
         return userChats;
@@ -127,7 +136,6 @@ export class DrizzleChatRepository implements ChatRepository
                 .limit(env.MESSAGE_LIMIT_PER_REQUEST);
         }
         
-
         return result;
     };
 

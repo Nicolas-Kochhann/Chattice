@@ -6,6 +6,7 @@ import { strict as assert } from 'node:assert';
 import { buildApp } from '../../src/app.js';
 import { upTestPostgresContainer, downTestPostgresContainer } from '../test.utils.js';
 import { pool } from '../../src/db/connection.js';
+import { ResponseUserDTO } from '../../src/modules/users/user.types.js';
 
 suite('Chat Routes', () => {
     let app: FastifyInstance;
@@ -83,11 +84,13 @@ suite('Chat Routes', () => {
         assert(Array.isArray(chats));
         assert(chats.length >= 1);
 
+        console.log(JSON.stringify(chats));
+
         const found = chats.find((c: any) => c.id === chat.id);
         assert(found, 'Created chat should be present in list');
         assert(Array.isArray(found.users));
-        assert(found.users.some((u: any) => u.id === userA.id));
-        assert(found.users.some((u: any) => u.id === userB.id));
+        assert(found.users.some((u: ResponseUserDTO) => u.id === userA.id));
+        assert(found.users.some((u: ResponseUserDTO) => u.id === userB.id));
 
         // Get messages for chat (should be empty initially)
         const getMessages = await app.inject({

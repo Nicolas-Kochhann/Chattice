@@ -10,7 +10,6 @@ export class MockChatRepository implements ChatRepository {
     private chatUsers = new Map<number, number[]>();
     private chatIdCounter = 1;
     private messageIdCounter = 1;
-    private authorIdCounter = 1;
 
     async findById(id: number): Promise<Chat | null> {
         const chat = this.chats.find((item) => item.id === id);
