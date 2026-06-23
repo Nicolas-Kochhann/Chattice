@@ -21,9 +21,9 @@ export class MessageService
         return await this.repository.find(id);
     }
 
-    async update(messageDTO: UpdateMessageDTO)
+    async update(id: number, messageDTO: UpdateMessageDTO)
     {
-        return await this.repository.update(messageDTO);
+        return await this.repository.update(id, messageDTO);
     }
 
     async delete(id: number)

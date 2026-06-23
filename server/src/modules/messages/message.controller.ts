@@ -10,6 +10,8 @@ export class MessageController
     constructor(service: MessageService){
         this.service = service;
         this.createMessage = this.createMessage.bind(this);
+        this.updateMessage = this.updateMessage.bind(this);
+        this.deleteMessage = this.deleteMessage.bind(this);
     }
 
     async createMessage(request: FastifyRequest<{ Body: CreateMessageDTO }>, reply: FastifyReply)
@@ -22,13 +24,14 @@ export class MessageController
         return reply.status(201).send(response);
     }
 
-    async updateMessage(request: FastifyRequest<{ Body: UpdateMessageDTO }>, reply: FastifyReply)
+    async updateMessage(request: FastifyRequest<{ Body: UpdateMessageDTO, Params: MessageParams }>, reply: FastifyReply)
     {
-        const message = await this.service.find(request.body.id);
+        const id = request.params.id;
+        const message = await this.service.find(id);
         if(!message) throw new MessageDoesNotExists();
 
         const messageDTO = request.body;
-        const response = await this.service.update(messageDTO);
+        const response = await this.service.update(id, messageDTO);
 
         return reply.status(200).send(response);
     }

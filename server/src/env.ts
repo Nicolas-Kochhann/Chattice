@@ -13,4 +13,4 @@ const envSchema = z.object({
     MESSAGE_LIMIT_PER_REQUEST: z.coerce.number().default(20)
 });
 
-export const env = envSchema.parse(process.env);
+export let env = envSchema.parse(process.env);

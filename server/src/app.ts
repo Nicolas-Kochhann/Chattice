@@ -6,6 +6,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { authHook } from './hooks/auth.hook.js';
 import { chatRoutes } from './modules/chats/chat.routes.js';
+import { messageRoutes } from './modules/messages/message.routes.js';
 
 export async function buildApp(options: object = {})
 {
@@ -32,13 +33,14 @@ export async function buildApp(options: object = {})
         routePrefix: '/docs'
     });
 
-
     await app.register(authRoutes, { prefix: '/auth' });
 
     // Protected routes go here.
-    app.register(async function protectedRoutes(app, options) {
+    await app.register(async function protectedRoutes(instance, options) {
 
-        await app.register(chatRoutes, { prefix: '/chats' });
+        instance.addHook('onRequest', authHook);
+        await instance.register(chatRoutes, { prefix: '/chats' });
+        await instance.register(messageRoutes, { prefix: '/messages' });
 
     });
 

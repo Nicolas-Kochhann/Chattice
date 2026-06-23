@@ -6,11 +6,11 @@ export const messageInsertSchema = createInsertSchema(messages);
 export const messageSelectSchema = createSelectSchema(messages);
 
 export const createMessageDTOSchema = messageInsertSchema.omit({
-    authorId: true
-})
+    authorId: true,
+    createdAt: true
+});
 
 export const updateMessageDTOSchema = z.object({
-    id: z.coerce.number().nonnegative(),
     text: z.string().optional()
 });
 

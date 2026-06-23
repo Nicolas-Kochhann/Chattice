@@ -20,11 +20,11 @@ export class MockMessageRepository implements MessageRepository {
         return this.messages.find((message) => message.id === id) || null;
     }
 
-    async update(message: UpdateMessageDTO): Promise<Message> {
-        const existingMessage = this.messages.find((item) => item.id === message.id);
+    async update(id: number, message: UpdateMessageDTO): Promise<Message> {
+        const existingMessage = this.messages.find((item) => item.id === id);
 
         if (!existingMessage) {
-            throw new Error(`Message with id ${message.id} not found`);
+            throw new Error(`Message with id ${id} not found`);
         }
 
         const updatedMessage: Message = {
@@ -33,7 +33,7 @@ export class MockMessageRepository implements MessageRepository {
         } as Message;
 
         this.messages = this.messages.map((item) =>
-            item.id === message.id ? updatedMessage : item
+            item.id === id ? updatedMessage : item
         );
 
         return updatedMessage;

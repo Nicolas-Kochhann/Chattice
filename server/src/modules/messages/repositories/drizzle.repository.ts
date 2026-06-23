@@ -27,8 +27,8 @@ export class DrizzleMessageRepository implements MessageRepository
         return message;
     }
 
-    async update(message: UpdateMessageDTO): Promise<Message> {
-        const [ result ] = await db.update(messages).set({ text: message.text }).where(eq(messages.id, message.id)).returning({
+    async update(id: number, message: UpdateMessageDTO): Promise<Message> {
+        const [ result ] = await db.update(messages).set({ text: message.text }).where(eq(messages.id, id)).returning({
             id: messages.id,
             text: messages.text,
             authorId: messages.authorId,
