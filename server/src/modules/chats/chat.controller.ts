@@ -8,6 +8,8 @@ export class ChatController {
     constructor(service: ChatService) {
         this.service = service;
         this.createChat = this.createChat.bind(this);
+        this.getChats = this.getChats.bind(this);
+        this.getChatMessages = this.getChatMessages.bind(this);
     }
 
     async createChat(request: FastifyRequest<{ Body: CreateChatDTO }>, reply: FastifyReply) {
