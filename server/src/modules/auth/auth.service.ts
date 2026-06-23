@@ -62,7 +62,7 @@ export class AuthService
             return jwt.verify(token, env.API_KEY) as JwtPayload;
         } catch (err: any) {
             if(err.name === 'TokenExpiredError') throw new TokenExpiredError();
-            else if(err.name = 'NotBeforeError') throw new TokenNotBeforeError();
+            else if(err.name === 'NotBeforeError') throw new TokenNotBeforeError();
             else throw new TokenInvalidError();
         }
     }
