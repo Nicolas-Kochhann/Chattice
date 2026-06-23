@@ -1,12 +1,11 @@
-import { FastifyPluginAsync } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { AuthService } from "../modules/auth/auth.service.js";
-import { DrizzleRepository } from "../modules/users/repositories/drizzle.repository.js";
+import { DrizzleUserRepository } from "../modules/users/repositories/drizzle.repository.js";
 import { AuthorizationFailedError } from "../modules/auth/auth.errors.js";
 
-export const authHook: FastifyPluginAsync = async (app, options) => {
-
-    app.addHook("onRequest", async (request, reply) => {
-        const userRepository = new DrizzleRepository();
+export async function authHook(request: FastifyRequest, reply: FastifyReply)
+{
+        const userRepository = new DrizzleUserRepository();
         const authService = new AuthService(userRepository);
 
         if(request.headers.authorization) {
@@ -24,12 +23,11 @@ export const authHook: FastifyPluginAsync = async (app, options) => {
 
             const token = authService.generateToken(user);
 
+            request.user = { id: user.id, name: user.name, email: user.email }
+
             reply.header('x-api-token', token);
-            reply.header('x-api-toke-ttl', AuthService.TOKEN_TTL);
+            reply.header('x-api-token-ttl', AuthService.TOKEN_TTL);
         } else {
             throw new AuthorizationFailedError('Refresh token not provided.')
         }
-        
-    });
-
 }

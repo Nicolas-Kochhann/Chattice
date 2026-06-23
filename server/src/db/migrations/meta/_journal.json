@@ -8,6 +8,13 @@
       "when": 1778456014227,
       "tag": "0000_even_starbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781570938956,
+      "tag": "0001_woozy_monster_badoon",
+      "breakpoints": true
     }
   ]
 }

@@ -1,13 +1,13 @@
 import { test, suite } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { AuthService } from "../../src/modules/auth/auth.service.js";
-import { MockRepository } from '../../src/modules/users/repositories/mock.repository.js';
+import { MockUserRepository } from '../../src/modules/users/repositories/mock.repository.js';
 import { EmailAlreadyExistsError } from '../../src/modules/auth/auth.errors.js';
 
 suite('AuthService', () => {
 
     test('AuthService - registryUser success', async () => {
-        const authService = new AuthService(new MockRepository());
+        const authService = new AuthService(new MockUserRepository());
 
         const { user, token, refreshToken } = await authService.registryUser({ name: 'John', email: 'john@example.com', password: 'password123' });
         assert(user !== null);
@@ -24,7 +24,7 @@ suite('AuthService', () => {
 
 
     test('AuthService - registryUser duplicate email', async () => {
-        const authService = new AuthService(new MockRepository());
+        const authService = new AuthService(new MockUserRepository());
 
         // Register first user
         await authService.registryUser({ name: 'John', email: 'john@example.com', password: 'password123' });
