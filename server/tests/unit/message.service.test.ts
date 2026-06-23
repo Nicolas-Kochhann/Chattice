@@ -35,8 +35,8 @@ suite('MessageService', () => {
 
         const created = await repository.create({ text: 'Before', authorId: 1, chatId: 3 });
 
-        const updateDTO: UpdateMessageDTO = { id: created.id, text: 'After' };
-        const updated = await messageService.update(updateDTO);
+        const updateDTO: UpdateMessageDTO = { text: 'After' };
+        const updated = await messageService.update(created.id, updateDTO);
 
         assert(updated.id === created.id);
         assert(updated.text === 'After');
@@ -57,10 +57,11 @@ suite('MessageService', () => {
 
     test('MessageService - update missing message rejects', async () => {
         const messageService = new MessageService(new MockMessageRepository());
-        const updateDTO: UpdateMessageDTO = { id: 999, text: 'Not found' };
+        const nonExistentId = 999;
+        const updateDTO: UpdateMessageDTO = { text: 'Not found' };
 
         await assert.rejects(
-            async () => { await messageService.update(updateDTO); },
+            async () => { await messageService.update(nonExistentId, updateDTO); },
             (error: unknown) => {
                 assert(error instanceof Error);
                 return (error as Error).message.includes('not found');
