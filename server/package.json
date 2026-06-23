@@ -9,7 +9,7 @@
     "build": "tsc",
     "key:generate": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
     "refresh-key:generate": "node -e \"console.log(require('crypto').randomBytes(64).toString('hex'))\"",
-    "test:integration": "tsx --env-file=.env.test --test 'tests/integration/*.test.ts'",
+    "test:integration": "tsx --env-file=.env --test 'tests/integration/*.test.ts'",
     "test:unit": "tsx --env-file=.env --test 'tests/unit/*.test.ts'",
     "migrations:up": "drizzle-kit up",
     "migrations:generate": "drizzle-kit generate",
