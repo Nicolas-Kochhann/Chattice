@@ -1,1 +1,1 @@
-> establish connection to ws server
+> Route protection
