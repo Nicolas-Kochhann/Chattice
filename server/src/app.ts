@@ -4,6 +4,9 @@ import { validatorCompiler, serializerCompiler, ZodTypeProvider, jsonSchemaTrans
 import { authRoutes } from './modules/auth/auth.routes.js';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
+import { authHook } from './hooks/auth.hook.js';
+import { chatRoutes } from './modules/chats/chat.routes.js';
+import { messageRoutes } from './modules/messages/message.routes.js';
 
 export async function buildApp(options: object = {})
 {
@@ -30,10 +33,19 @@ export async function buildApp(options: object = {})
         routePrefix: '/docs'
     });
 
+    await app.register(authRoutes, { prefix: '/auth' });
+
+    // Protected routes go here.
+    await app.register(async function protectedRoutes(instance, options) {
+
+        instance.addHook('onRequest', authHook);
+        await instance.register(chatRoutes, { prefix: '/chats' });
+        await instance.register(messageRoutes, { prefix: '/messages' });
+
+    });
+
     // Register WebSocket plugin.
     await app.register(WebSocket);
-
-    await app.register(authRoutes, { prefix: '/auth' });
 
     app.get('/', { websocket: true }, (socket, request) => {
         socket.send('Conectado');

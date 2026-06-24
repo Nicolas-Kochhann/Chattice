@@ -3,7 +3,7 @@ import { Pool } from "pg";
 import * as schema from "./schema/index.js";
 import { env } from "../env.js";
 
-export const pool = new Pool({
+export let pool = new Pool({
     host: env.POSTGRES_HOST,
     user: env.POSTGRES_USER,
     password: env.POSTGRES_SECRET,
@@ -11,4 +11,17 @@ export const pool = new Pool({
     port: env.POSTGRES_PORT
 });
 
-export const db = drizzle({ client: pool, schema: schema });
+export let db = drizzle({ client: pool, schema: schema });
+
+// Used to load postgres test container configurations.
+export function loadTestDBConfigs(port: number){
+    pool = new Pool({
+        host: env.POSTGRES_HOST,
+        user: env.POSTGRES_USER,
+        password: env.POSTGRES_SECRET,
+        database: env.POSTGRES_NAME,
+        port: port
+    });
+
+    db = drizzle({ client: pool, schema: schema });
+}
