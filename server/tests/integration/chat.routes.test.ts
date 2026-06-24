@@ -84,8 +84,6 @@ suite('Chat Routes', () => {
         assert(Array.isArray(chats));
         assert(chats.length >= 1);
 
-        console.log(JSON.stringify(chats));
-
         const found = chats.find((c: any) => c.id === chat.id);
         assert(found, 'Created chat should be present in list');
         assert(Array.isArray(found.users));

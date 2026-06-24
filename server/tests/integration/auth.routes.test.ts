@@ -36,8 +36,6 @@ suite('Auth Routes', () => {
             }
         });
 
-        console.log(response.json());
-
         assert(response.statusCode === 201);
         assert(response.headers['content-type'] === 'application/json; charset=utf-8');
         assert(response.headers['x-api-token'] && response.headers['x-refresh-token']);
@@ -65,8 +63,6 @@ suite('Auth Routes', () => {
         assert(response.headers['content-type'] === 'application/json; charset=utf-8');
         
         const body = response.json();
-
-        console.log(body.name, body.email)
 
         assert(body.user.id === 1);
         assert(body.user.name === 'John Doe');
