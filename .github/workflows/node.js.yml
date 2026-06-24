@@ -42,7 +42,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    enviroment: Chattice CI
+    environment: Chattice CI
 
     defaults:
       run:
